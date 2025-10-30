@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+.env
+.env.*
+venv/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+
+# IDE / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Data / media
+data/
+datasets/
+*.mp3
+*.wav
+*.mp4
+*.zip
+*.tar
+*.tar.gz
