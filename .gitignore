@@ -4,12 +4,11 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Virtual envs
+# Virtual environments
 .venv/
 venv/
 .env
 .env.*
-
 # Build / packaging
 build/
 dist/
@@ -20,7 +19,7 @@ dist/
 .vscode/
 .idea/
 
-# Large/media (tweak as needed)
+# Media & big stuff (adjust if needed)
 data/
 datasets/
 *.mp3
