@@ -20,4 +20,4 @@ npm run build && npm run preview
 ## Notes
 - Waveform preview uses **wavesurfer.js**; it renders from a Blob URL (no upload).
 - Charts are built with **recharts**.
-- Tailwind provides the warm, soft aesthetic.
+- Tailwind provides the warm, soft aesthetic.# profess
