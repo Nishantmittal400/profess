@@ -64,3 +64,10 @@ build/
 *.ogg
 uploads/
 data/
+# Ignore docker files
+backend.Dockerfile
+frontend.Dockerfile
+docker-compose.yml
+
+# Ignore render config (we’ll make fresh one later)
+render.yaml
