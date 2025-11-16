@@ -8,6 +8,7 @@ import OHCRDonut from "./components/OHCRDonut";
 import JsonPanel from "./components/JsonPanel";
 import ProcessingSteps from "./components/ProcessingSteps";
 import CoachReport from "./components/CoachReport";
+import TierReports from "./components/TierReports";
 import { warm, prettyPct } from "./lib/utils";
 import { processAudio } from "./lib/api";
 
@@ -43,6 +44,8 @@ export default function App(){
   const steps = resp?.steps ?? {};
   const coachAnalysis = steps.coach_analysis;
   const coachReport = resp?.coach_report ?? coachAnalysis?.report;
+  const tierAnalysis = resp?.tier_analysis;
+  const tierResults = tierAnalysis?.results ?? [];
 
   return (
     <div className={`min-h-screen ${warm.bg} ${warm.text} antialiased`}>
@@ -104,6 +107,7 @@ export default function App(){
 
             <TimelineChart data={timeline} />
             <CoachReport report={coachReport} />
+            <TierReports tiers={tierResults} transcript={tierAnalysis?.transcript} />
             <JsonPanel data={resp} />
           </>
         ) : (

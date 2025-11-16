@@ -15,6 +15,7 @@ from backend.diarize_simple import (
 )
 from backend.discourse_coach import label_transcript
 from backend.metrics_engine import compute_all
+from backend.tiered_prompts import run_tiered_prompts
 
 app = FastAPI(title="Make Teaching Great Again – Local")
 app.add_middleware(
@@ -23,7 +24,8 @@ app.add_middleware(
     allow_methods=["*"], allow_headers=["*"],
 )
 
-os.makedirs(CFG.results_dir, exist_ok=True)
+if CFG.store_results:
+    os.makedirs(CFG.results_dir, exist_ok=True)
 
 @app.get("/health")
 def health():
@@ -109,16 +111,26 @@ async def process(audio: UploadFile = File(...)):
         "meta": coach_meta,
     }
 
-    # 7) Save and return
+    # 7) Tiered prompts (Tier 1-3 narratives)
+    tier_start = time.perf_counter()
+    tier_analysis = run_tiered_prompts(labeled)
+    steps["tier_prompts"] = {
+        "status": "completed",
+        "duration_ms": int((time.perf_counter() - tier_start) * 1000),
+        "results": tier_analysis.get("results", []),
+    }
+
+    # 8) Save and return
     sid = uuid.uuid4().hex[:8]
-    out_dir = os.path.join(CFG.results_dir, sid)
-    os.makedirs(out_dir, exist_ok=True)
-    with open(os.path.join(out_dir, "utterances.json"), "w", encoding="utf-8") as f:
-        json.dump(labeled, f, ensure_ascii=False)
-    with open(os.path.join(out_dir, "metrics.json"), "w", encoding="utf-8") as f:
-        json.dump(metrics, f, ensure_ascii=False)
-    with open(os.path.join(out_dir, "coach_report.json"), "w", encoding="utf-8") as f:
-        json.dump(coach_report, f, ensure_ascii=False)
+    if CFG.store_results:
+        out_dir = os.path.join(CFG.results_dir, sid)
+        os.makedirs(out_dir, exist_ok=True)
+        with open(os.path.join(out_dir, "utterances.json"), "w", encoding="utf-8") as f:
+            json.dump(labeled, f, ensure_ascii=False)
+        with open(os.path.join(out_dir, "metrics.json"), "w", encoding="utf-8") as f:
+            json.dump(metrics, f, ensure_ascii=False)
+        with open(os.path.join(out_dir, "coach_report.json"), "w", encoding="utf-8") as f:
+            json.dump(coach_report, f, ensure_ascii=False)
 
     return JSONResponse({
         "session_id": sid,
@@ -127,4 +139,5 @@ async def process(audio: UploadFile = File(...)):
         "metrics": {k: v for k, v in metrics.items() if k != "timeline"},
         "timeline": metrics.get("timeline", []),
         "coach_report": coach_report,
+        "tier_analysis": tier_analysis,
     })

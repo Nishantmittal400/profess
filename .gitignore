@@ -28,3 +28,39 @@ datasets/
 *.zip
 *.tar
 *.tar.gz
+
+# Ignore Python virtual environments
+venv/
+.env/
+.venv/
+
+# Ignore Python caches
+__pycache__/
+*.pyc
+
+# Ignore huge whisper/model files
+models/
+whisper/
+.whisper/
+
+# Ignore Node modules
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Ignore build folders
+dist/
+build/
+.next/
+.cache/
+
+# Ignore system files
+.DS_Store
+
+# Ignore audio/data dumps
+*.mp3
+*.wav
+*.ogg
+uploads/
+data/

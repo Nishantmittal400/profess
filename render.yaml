@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: profess-backend
+    env: docker
+    plan: starter
+    dockerfilePath: backend.Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    numInstances: 1
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: gpt-4o-mini
+      - key: USE_LLM
+        value: "true"
+      - key: RESULTS_DIR
+        value: /app/backend/results
+      - key: STORE_RESULTS
+        value: "false"

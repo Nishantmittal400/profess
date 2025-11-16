@@ -1,10 +1,14 @@
 import sqlite3, json, time, hashlib, os
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Optional
 
 class SQLiteCache:
-    def __init__(self, path: str):
+    def __init__(self, path: Optional[str]):
         self.path = path
-        os.makedirs(os.path.dirname(path), exist_ok=True)
+        self.disabled = not path
+        if self.disabled:
+            return
+        directory = os.path.dirname(path) or "."
+        os.makedirs(directory, exist_ok=True)
         with sqlite3.connect(self.path) as c:
             self._ensure_schema(c)
 
@@ -27,6 +31,8 @@ class SQLiteCache:
         )
 
     def get_or_set(self, payload: Dict[str, Any], fn) -> Tuple[dict, dict]:
+        if self.disabled:
+            return fn()
         key = self._hash(payload)
         with sqlite3.connect(self.path) as c:
             self._ensure_schema(c)

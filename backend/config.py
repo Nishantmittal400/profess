@@ -1,5 +1,8 @@
 import os
 from dataclasses import dataclass
+from typing import Optional
+
+CACHE_DB_DEFAULT = "backend/results/cache.sqlite"
 
 @dataclass
 class Config:
@@ -11,6 +14,11 @@ class Config:
     diarizer: str = os.environ.get("DIARIZER", "simple")
     max_speakers: int = int(os.environ.get("MAX_SPEAKERS", 2))
     results_dir: str = os.environ.get("RESULTS_DIR", "backend/results")
-    cache_db: str = os.environ.get("CACHE_DB", "backend/results/cache.sqlite")
+    cache_db: Optional[str] = os.environ.get("CACHE_DB")
+    store_results: bool = os.environ.get("STORE_RESULTS", "true").lower() == "true"
 
 CFG = Config()
+if isinstance(CFG.cache_db, str):
+    CFG.cache_db = CFG.cache_db.strip() or None
+if CFG.cache_db is None and CFG.store_results:
+    CFG.cache_db = CACHE_DB_DEFAULT

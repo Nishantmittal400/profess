@@ -7,6 +7,7 @@ const STEP_ORDER = [
   { key: "labeling", label: "LLM Labeling" },
   { key: "metrics", label: "Metrics" },
   { key: "coach_analysis", label: "Coach Report" },
+  { key: "tier_prompts", label: "Tiered Analyses" },
 ];
 
 const STATUS_ICON = {

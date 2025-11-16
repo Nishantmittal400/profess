@@ -1,4 +1,8 @@
-let API_BASE = "http://127.0.0.1:8000";
+const runtimeConfig = typeof window !== "undefined" ? window.__APP_CONFIG__ : undefined;
+const runtimeBase = runtimeConfig && runtimeConfig.apiBase ? runtimeConfig.apiBase : undefined;
+const envBase = typeof import.meta !== "undefined" && import.meta.env ? import.meta.env.VITE_API_BASE : undefined;
+
+let API_BASE = runtimeBase || envBase || "http://127.0.0.1:8000";
 export function setApiBase(url) { API_BASE = url; }
 export function getApiBase() { return API_BASE; }
 
